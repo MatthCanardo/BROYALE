@@ -240,7 +240,7 @@ function elimination(){
             }
         }
         
-    }, 300)
+    }, 400)
 }
 
 /** Fonction affichage du nombre de joueur */
