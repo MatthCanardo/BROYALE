@@ -8,8 +8,7 @@ const titrePlayerList = document.querySelector("h2");
 const nbPlayers = document.querySelector("h3");
 
 
-/** Classe Players Battle Royale */
-
+/** Classe object joueurs */
 class Player{
     constructor(id, avatar, nom, sante)
     {
@@ -20,8 +19,7 @@ class Player{
     }
 }
 
-/** Declaration Players */
-
+/** Création des 100 joueurs */
 const players = [
     new Player(1, "img/skin1.png", "MatthCanardo", "op"),
     new Player(2, "img/skin2.png", "Cassandro_the_king", "op"),
@@ -125,49 +123,48 @@ const players = [
     new Player(100, "img/skin8.png","Claire_Chacal", "op")
 ]
 
-/** Player(s) vivants */
+/** Tableau des joueurs vivants */
 const playersVivants = [];
 
-/** START */
+/** Début de la partie */
 let seconde = 5;
 
 letsPlay.addEventListener('click', function(){
+    /** Ajout des 100 joueurs dans le tableau des joueurs vivants */
     players.forEach(player => 
     {
         playersVivants.push(player);
     });
-
+    /**  Affichage du decompte */
     const decompte = setInterval(function()
     {
-        (seconde);
         messageStart.textContent = seconde;
         if (seconde === 5)
         {
             letsPlayParent.removeChild(letsPlay);
         }
-        if (seconde <= 0)
+        else if (seconde <= 0)
         {
-            
             messageStart.textContent = "Les joueurs sautent du bus...";
             clearInterval(decompte);
             affichageNumberPlayer();
-            afficheJoueur();
-            
+            afficheJoueur(); 
         }
         seconde--;
     }, 1000)
 });
 
-/** RESTART */
+/** Recommencer la partie */
 restart.addEventListener('click', function(){
     location.reload();
 })
 
-/** Fonction affichage joueurs */
+/** Fonction affichage des joueurs sur la page */
 function afficheJoueur(){
     playersVivants.forEach(playerVivant => {
+        /** DOM */
         const col = document.createElement('div');
-        col.setAttribute("class", "col-2 col-lg-1");
+        col.setAttribute("class", "col-3 col-lg-1");
         const avatar = document.createElement('img');
         avatar.setAttribute('src', playerVivant.avatar);
         const nom = document.createElement("p");
@@ -175,31 +172,33 @@ function afficheJoueur(){
         playersList.appendChild(col);
         col.appendChild(avatar);
         col.appendChild(nom);
-        const intervalLi = setInterval(function(){
-            if (playerVivant.sante === "mort"){
-
+        /** Gestions de l'affichage des joueurs éliminés */
+        const intervalLi = setInterval(function()
+        {
+            if (playerVivant.sante === "mort")
+            {
                 nom.style.color ="#C04A4A";
                 avatar.style.backgroundColor = "#C04A4A";
-                avatar.style.borderRadius = "20px";
-                
+                avatar.style.borderRadius = "20px";  
             }
         }, 0)
     });
-
-
+    /** Appel de la fonction élimination */
     elimination();
 }
 
 /** Fonction élimination */
 function elimination(){
+    /** Toutes les x secondes : récupère deux joueurs aléatoirement du tableau pour un affrontement */
     const intervalElimination = setInterval(function(){
         const playerAleatoire1 = Math.floor(Math.random() * playersVivants.length);
         const playerAleatoire2 = Math.floor(Math.random() * playersVivants.length);
         const player1 = playersVivants[playerAleatoire1];
         const player2 = playersVivants[playerAleatoire2];
-        if (player1 != player2){
+        if (player1 != player2)
+        {
             const end = Math.floor(Math.random() * 2);
-            
+
             if (end === 0)
             {
                 playersVivants.splice(playerAleatoire1, 1);
@@ -207,9 +206,7 @@ function elimination(){
                 setTimeout(function(){
                     messageStart.innerHTML = player2.nom + " elimine " + player1.nom;
                     
-                },1)
-
-                
+                },0)  
             }
     
             else if (end === 1){
@@ -218,14 +215,10 @@ function elimination(){
                 setTimeout(function(){
                     messageStart.innerHTML = player1.nom + " elimine " + player2.nom;
                     
-                },1)
-               
+                },0)
             }
 
-            if (playersVivants.length === 1){
-                
-                clearInterval(intervalElimination);
-            }
+            playersVivants.length === 1 ? clearInterval(intervalElimination) : "";
 
             if (playersVivants.length == 1){
                 setTimeout(function(){
@@ -236,7 +229,7 @@ function elimination(){
                     messageStart.innerHTML = "Victoire royale pour " + playersVivants[0].nom;
                     messageStart.appendChild(image);
                     
-                },1)
+                },0)
             }
         }
         
